@@ -1,27 +1,31 @@
 #pragma once
 #include <iostream>
+#include <vector>
+//#include "CANIMAL.h"
+//#include "CVEHICLE.h"
 
-short MAX_Width = 81;
-short MAX_Height = 25;
+short MAX_Y = 81;
+short MAX_X = 25;
 
-short MAX_People_Width = 5;
-short MAX_People_Height = 3;
+short MAX_People_Y = 5;
+short MAX_People_X = 3;
 
-short step = 3;
+short step = 4;
 
 extern char BattleField[25][81];
 extern char People[4][3];
 
-class CPeople {
+using namespace std;
+
+class CPEOPLE {
 private:
 	int x, y;
-	bool checkValidPosition;
+	bool checkValidPos(int x, int y);
 	bool state;
 public:
-	CPeople();
+	CPEOPLE();
 	int getX();
 	int getY();
-	bool checkValidPosition(int x, int y);
 	void drawPeople();
 	void setX(int x);
 	void setY(int y);
@@ -30,10 +34,12 @@ public:
 	void Right();
 	void Left();
 	void Down();
-	/*bool isImpactAnimal(CANIMAL cAni[]);
-	bool isImpactVehicle(CVEHICLE CVehi[]);*/
+	//bool isImpactAnimal(vector<CANIMAL*>& cAni);
+	//bool isImpactVehicle(vector<CVEHICLE*>& CVehi);
 	bool isFinish();
 	bool isDead();
-	~CPeople() = default;
+	~CPEOPLE() = default;
 };
+
+
 
