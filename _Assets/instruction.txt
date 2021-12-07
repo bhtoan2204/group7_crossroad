@@ -1,0 +1,13 @@
+ ._________________.
+ | _______________ |   Directional Buttons:    
+ | I             I |   	W A S D (Up Left Down Right)
+ | I             I |   Pause Game:  P
+ | I             I |   Resume Game: R
+ | I             I |   Save Game:   L
+ | I_____________I |   Load Game:   T
+ !_________________!   Exit Game:   Esc
+    ._[_______]_.
+.___|___________|___.
+|::: ____           |
+|    ~~~~ [CD-ROM]  |
+!___________________!
