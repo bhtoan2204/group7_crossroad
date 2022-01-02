@@ -17,15 +17,15 @@ CGAME::CGAME()
 
 void CGAME::drawMenu()
 {
-	memset((char*)Title, 0, 5 * 77);
+	memset((char*)Title, 0, 16 * 83);
 	memset((char*)Menu, 0, 3 * 24);
 
 	//Load Title
 	FILE* f = fopen("_Assets\\Title.txt", "r");
-	for (int i = 0; i < 5; i++) {
-		char s[78];
-		fgets(s, 78, f);
-		for (int j = 0; j < 77; j++) {
+	for (int i = 0; i < 16; i++) {
+		char s[84];
+		fgets(s, 84, f);
+		for (int j = 0; j < 83; j++) {
 			Title[i][j] = s[j];
 		}
 	}
@@ -44,29 +44,54 @@ void CGAME::drawMenu()
 
 	//Draw Title
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-	for (int i = 0; i < 5; i++) {
-		GotoXY(21, 2 + i);
-		cout.write(&Title[i][0], 76);
+	for (int i = 0; i < 16; i++) {
+		GotoXY(19, 2 + i);
+		cout.write(&Title[i][0], 82);
 	}
 
 	//Draw Menu
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 	for (int i = 0; i < 3; i++) {
-		GotoXY(46, 10 + i);
+		GotoXY(46, 19 + i);
 		cout.write(&Menu[i][0], 23);
 	}
+
+	GotoXY(0, xCur);
 }
 
 void drawNoti(int x)
 {
 	string s;
 	if (x == 5 || x == 4) {
-		s = "|                     |";
+		/*s = "|                     |";
 		for (int i = 0; i < 23; i++) NotiTable[0][i] = s[i];
 		if (x == 5) s = "|    *  You Lose  *   |";
 		else s = "|    ~  You Won  ~    |";
 		for (int i = 0; i < 23; i++) NotiTable[1][i] = s[i];
-		for (int i = 0; i < 23; i++) NotiTable[2][i] = NotiTable[0][i];
+		for (int i = 0; i < 23; i++) NotiTable[2][i] = NotiTable[0][i];*/
+		if (x == 4) {
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			GotoXY(25,9);
+			cout.write(" __ __            _ _ _ _     ", 30);
+			GotoXY(25, 10);
+			cout.write("|  |  |___ _ _   | | | |_|___ ", 30);
+			GotoXY(25, 11);
+			cout.write("|_   _| . | | |  | | | | |   |", 30);
+			GotoXY(25, 12);
+			cout.write("  |_| |___|___|  |_____|_|_|_|", 30);
+		}
+		else {
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+			GotoXY(25, 9);
+			cout.write(" __ __            _                ", 35);
+			GotoXY(25, 10);
+			cout.write("|  |  |___ _ _   | |   ___ ___ ___ ", 35);
+			GotoXY(25, 11);
+			cout.write("|_   _| . | | |  | |__| . |  _| ._|", 35);
+			GotoXY(25, 12);
+			cout.write("  |_| |___|___|  |____|___|_`_|___|", 35);
+		}
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	}
 	else if (x == 3) {
 		s = "|      Continue?      |";
@@ -90,7 +115,7 @@ void drawNoti(int x)
 		GotoXY(xNoti, yNoti + i);
 		cout.write(&NotiTable[i][0], 23);
 	}
-	GotoXY(0, 21);
+	GotoXY(0, xCur);
 }
 
 void CGAME::drawGame()
@@ -120,38 +145,52 @@ void CGAME::drawGame()
 
 void CGAME::drawExplosion()
 {
-	GotoXY(cn.getY(), cn.getX());
-	cout << Explosion[1][1];
-	Sleep(100);
-
-	GotoXY(cn.getY(), cn.getX()-1);
-	cout << Explosion[0][1];
-	GotoXY(cn.getY(), cn.getX()+1);
-	cout << Explosion[2][1];
-	GotoXY(cn.getY()-1, cn.getX());
-	cout << Explosion[1][0];
-	GotoXY(cn.getY()+1, cn.getX());
+	int posX = cn.getX() + 1, posY = cn.getY() + 1;
+	GotoXY(posY, posX);
 	cout << Explosion[1][2];
 	Sleep(100);
 
-	GotoXY(cn.getY()-1, cn.getX()-1);
-	cout << Explosion[0][0];
-	GotoXY(cn.getY()+1, cn.getX()-1);
+	GotoXY(posY, posX-1);
 	cout << Explosion[0][2];
-	GotoXY(cn.getY()-1, cn.getX()+1);
-	cout << Explosion[2][0];
-	GotoXY(cn.getY()+1, cn.getX()+1);
+	GotoXY(posY, posX+1);
 	cout << Explosion[2][2];
+	GotoXY(posY-1, posX);
+	cout << Explosion[1][1];
+	GotoXY(posY+1, posX);
+	cout << Explosion[1][3];
 	Sleep(100);
 
+	GotoXY(posY-1, posX-1);
+	cout << Explosion[0][1];
+	GotoXY(posY+1, posX-1);
+	cout << Explosion[0][3];
+	GotoXY(posY-1, posX+1);
+	cout << Explosion[2][1];
+	GotoXY(posY+1, posX+1);
+	cout << Explosion[2][3];
+	Sleep(100);
 
-	GotoXY(0, 21);
+	GotoXY(posY - 2, posX - 1);
+	cout << Explosion[0][0];
+	GotoXY(posY + 2, posX - 1);
+	cout << Explosion[0][4];
+	GotoXY(posY - 2, posX);
+	cout << Explosion[1][0];
+	GotoXY(posY + 2, posX);
+	cout << Explosion[1][4];
+	GotoXY(posY - 2, posX + 1);
+	cout << Explosion[2][0];
+	GotoXY(posY + 2, posX + 1);
+	cout << Explosion[2][4];
+	Sleep(100);
+
+	GotoXY(0, xCur);
 }
 
 void CGAME::drawLight()
 {
 	int color = 4;
-	GotoXY(70, axt[0].getX());
+	GotoXY(80, axt[0].getPosition().getX());
 	if (axt[0].getTrafficLight()) {
 		color = 2;
 	}
@@ -159,7 +198,7 @@ void CGAME::drawLight()
 	cout << char(254);
 
 	color = 4;
-	GotoXY(70, axh[0].getX());
+	GotoXY(80, axh[0].getPosition().getX());
 	if (axh[0].getTrafficLight()) {
 		color = 2;
 	}
@@ -235,11 +274,11 @@ void CGAME::loadAssets()
 
 	//Load Info
 	f = fopen("_Assets\\Info.txt", "r");
-	memset((char*)InfoTable, 0, 10 * 19);
-	for (int i = 0; i < 10; i++) {
-		char s[20];
-		fgets(s, 20, f);
-		for (int j = 0; j < 19; j++) {
+	memset((char*)InfoTable, 0, 13 * 58);
+	for (int i = 0; i < 13; i++) {
+		char s[60];
+		fgets(s, 60, f);
+		for (int j = 0; j < 58; j++) {
 			InfoTable[i][j] = s[j];
 		}
 		//fgets(s, 16, f);
@@ -261,11 +300,11 @@ void CGAME::loadAssets()
 
 	//Load Explosion effect
 	f = fopen("_Assets\\Explosion.txt", "r");
-	memset((char*)Explosion, 0, 3 * 3);
+	memset((char*)Explosion, 0, 3 * 5);
 	for (int i = 0; i < 3; i++) {
-		char s[5];
-		fgets(s, 5, f);
-		for (int j = 0; j < 3; j++) {
+		char s[7];
+		fgets(s, 7, f);
+		for (int j = 0; j < 5; j++) {
 			Explosion[i][j] = s[j];
 		}
 		//fgets(s, 16, f);
@@ -340,9 +379,11 @@ void CGAME::loadAssets()
 
 void CGAME::initGame()
 {
+	IS_RUNNING = true;
+
 	//Set people
-	cn.setX(16);
-	cn.setY(34);
+	cn.setX(21);
+	cn.setY(40);
 	cn.setState(true);
 
 	//Set traffic
@@ -356,9 +397,9 @@ void CGAME::initGame()
 	delete[] axh;
 	axh = new CCAR[level + 1];
 	for (int i = 0; i < level + 1; i++) {
-		axt[i].setX(13);
+		axt[i].setX(17);
 		axt[i].setY(MAX_Y - MAX_T_Y - 2 - i * (MAX_T_Y + 5));
-		axh[i].setX(7);
+		axh[i].setX(9);
 		axh[i].setY(1 + i * (MAX_C_Y + 5));
 	}
 
@@ -369,10 +410,10 @@ void CGAME::initGame()
 	delete[] akl;
 	akl = new CDINOSAUR[level];
 	for (int i = 0; i < level; i++) {
-		ac[i].setX(4);
-		ac[i].setY(MAX_Y - MAX_T_Y - 2 - i * (MAX_T_Y + 5));
-		akl[i].setX(10);
-		akl[i].setY(1 + i * (MAX_C_Y + 5));
+		ac[i].setX(5);
+		ac[i].setY(MAX_Y - MAX_B_Y - 2 - i * (MAX_B_Y + 5));
+		akl[i].setX(13);
+		akl[i].setY(1 + i * (MAX_D_Y + 5));
 	}
 }
 
@@ -396,7 +437,7 @@ void CGAME::startGame()
 	for (int k = 0; k < level + 1; k++) {
 		for (int i = 0; i < MAX_T_X; i++) {
 			for (int j = 0; j < MAX_T_Y; j++) {
-				BattleField[axt[k].getX() + i][axt[k].getY() + j] = Truck[i][j];
+				BattleField[axt[k].getPosition().getX() + i][axt[k].getPosition().getY() + j] = Truck[i][j];
 			}
 		}
 	}
@@ -405,7 +446,7 @@ void CGAME::startGame()
 	for (int k = 0; k < level + 1; k++) {
 		for (int i = 0; i < MAX_C_X; i++) {
 			for (int j = 0; j < MAX_C_Y; j++) {
-				BattleField[axh[k].getX() + i][axh[k].getY() + j] = Car[i][j];
+				BattleField[axh[k].getPosition().getX() + i][axh[k].getPosition().getY() + j] = Car[i][j];
 			}
 		}
 	}
@@ -436,10 +477,10 @@ void CGAME::startGame()
 	}
 
 	//Draw Info
-	InfoTable[0][5] = (char)(level+48);
-	for (int i = 0; i < 10; i++) {
-		GotoXY(75, 3 + i);
-		cout.write(&InfoTable[i][0], 18);
+	InfoTable[1][31] = (char)(level + 48);
+	for (int i = 0; i < 13; i++) {
+		GotoXY(87, 3 + i);
+		cout.write(&InfoTable[i][0], 58);
 	}
 
 	//Remove Noti
@@ -448,17 +489,20 @@ void CGAME::startGame()
 
 void CGAME::exitGame(thread& t)
 {
-	t.detach();
+	IS_RUNNING = false;
+	t.join();
 }
 
-void CGAME::pauseGame()
+void CGAME::pauseGame(thread& t)
 {
 	IS_RUNNING = false;
+	t.join();
+	notiGame();
 }
 
-void CGAME::resumeGame(thread& t)
+void CGAME::resumeGame()
 {
-	
+	IS_RUNNING = true;
 }
 
 void CGAME::saveGame(string fName)
@@ -483,19 +527,24 @@ void CGAME::saveGame(string fName)
 		fprintf(f, "%d\n", ca->getY());
 	}
 	for (CVEHICLE* cv : cVehi) {
-		fprintf(f, "%d\n", cv->getX());
-		fprintf(f, "%d\n", cv->getY());
+		fprintf(f, "%d\n", cv->getPosition().getX());
+		fprintf(f, "%d\n", cv->getPosition().getY());
 		fprintf(f, "%d\n", cv->getTrafficLight());
 	}
 	fclose(f);
 }
 
-void CGAME::loadGame(string fName)
+bool CGAME::loadGame(string fName)
 {
-	if (fName == "") return;
+	if (fName == "") {
+		if (getPEOPLE().getX() == 0)
+			fName = "DEFAULT";
+		else return true;
+	}
 	fName = "_FileSave\\" + fName;
 	char const* s = fName.c_str();
 	FILE* f = fopen(s, "r");
+	if (!f) return false;
 	fscanf(f, "%d%d%d", &level, &time_truck, &time_car);
 	int x, y, t;
 	fscanf(f, "%d%d", &x, &y);
@@ -537,8 +586,10 @@ void CGAME::loadGame(string fName)
 	}
 	fclose(f);
 	system("cls");
+	reSizeConsole(1150, 500);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	startGame();
+	return true;
 }
 
 void CGAME::notiGame()
@@ -561,25 +612,28 @@ void CGAME::notiGame()
 		GotoXY(pointer, yNoti + 1);
 		while (1) {
 			temp = toupper(_getch());
-			if (temp == '\r') break;
+			if (temp == '\r') {
+				if (MOVING == 'L') {
+					saveGame(filename);
+					drawNoti(3);
+					break;
+				}
+				else {
+					if (loadGame(filename))
+						break;
+				}
+			}
 			if (temp == '\b' && pointer > xNoti + 2) {
 				GotoXY(--pointer, yNoti + 1);
 				cout.write(" ", 1);
-				filename.erase(filename.end()-1);
+				filename.erase(filename.end() - 1);
 				GotoXY(pointer, yNoti + 1);
 			}
-			else if (temp != '\b' && temp != 27 && pointer < xNoti + 2 + 20) {
+			else if (temp != '\b' && temp != '\r' && temp != 27 && pointer < xNoti + 2 + 20) {
 				GotoXY(pointer++, yNoti + 1);	
 				printf("%c", temp);
 				filename += temp;
 			}
-		}
-		if (MOVING == 'L') {
-			saveGame(filename);
-			drawNoti(3);
-		}
-		else {
-			loadGame(filename);
 		}
 	}
 }
@@ -598,12 +652,12 @@ void CGAME::removeNoti()
 	for (int i = 0; i < 24; i++) NotiTable[1][i] = s[i];
 	s = "                        ";
 	for (int i = 0; i < 24; i++) NotiTable[2][i] = s[i];
-	GotoXY(75, 14);
+	GotoXY(xNoti, yNoti);
 	for (int i = 0; i < 3; i++) {
-		GotoXY(75, 14 + i);
+		GotoXY(xNoti, yNoti + i);
 		cout.write(&NotiTable[i][0], 23);
 	}
-	GotoXY(0, 21);
+	GotoXY(0, xCur);
 }
 
 void CGAME::updatePosPeople(char c)
@@ -618,9 +672,9 @@ void CGAME::updatePosVehicle()
 {
 	for (int i = 0; i < level + 1; i++) {
 		if(axt[i].getTrafficLight())
-			axt[i].Move();
+			axt[i].move();
 		if(axh[i].getTrafficLight())
-			axh[i].Move();
+			axh[i].move();
 	}
 }
 
@@ -641,12 +695,12 @@ void CGAME::updateLight(vector<CVEHICLE*>& CV)
 
 void CGAME::SoundEffect()
 {
-	if (cn.getX() == 4) 
+	if (cn.getX() == 5) 
 		ac[0].Tell();
-	else if (cn.getX() == 7)
-		axh[0].Tell();
-	else if (cn.getX() == 10) 
+	else if (cn.getX() == 9)
+		axh[0].soundHorn();
+	else if (cn.getX() == 13) 
 		akl[0].Tell();
-	else if (cn.getX() == 13)
-		axt[0].Tell();
+	else if (cn.getX() == 17)
+		axt[0].soundHorn();
 }

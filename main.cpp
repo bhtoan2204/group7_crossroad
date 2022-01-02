@@ -7,7 +7,7 @@
 #include <thread>
 
 #include "Global.h"
-#include "Console.h"
+#include "CConsole.h"
 
 using namespace std;
 
@@ -70,11 +70,11 @@ void SubThread()
 		cg.getPEOPLE().drawPeople();
 
 		cg.drawGame();
-		GotoXY(0, 21);
+		GotoXY(0, 24);
+		ShowCur(false);
 
 		if (cg.getPEOPLE().isImpactAnimal(cg.getANIMAL()) || cg.getPEOPLE().isImpactVehicle(cg.getVEHICLE())) {
 			cg.drawExplosion();
-			//PlaySound(TEXT("Lose.wav"), NULL, SND_ASYNC);
 			cg.getPEOPLE().setState(false);
 			IS_RUNNING = false;
 			MOVING = ' ';
@@ -85,7 +85,6 @@ void SubThread()
 
 
 		if (cg.getPEOPLE().isFinish()) {
-			//PlaySound(TEXT("Finish.wav"), NULL, SND_ASYNC);
 			cg.getPEOPLE().setState(false);
 			IS_RUNNING = false;
 			MOVING = ' ';
@@ -96,12 +95,8 @@ void SubThread()
 			if (level < MAX_LEVEL) level++;
 			cg.initGame();
 			cg.startGame();
-			cg.getPEOPLE().setState(true);
-			IS_RUNNING = true;
 			t2 = thread{ SoundThread };
 			t3 = thread{ TrafficThread };
-			//cg.notiSpecificGame(3);
-			//cg.startGame();
 		}
 		Sleep(80);
 	}
@@ -111,11 +106,14 @@ void SubThread()
 
 int main() {
 	int temp;
+	ShowCur(false);
+	reSizeConsole(900, 420);
 	FixConsoleWindow();
 	cg.loadAssets();
 
+	xCur = 20;
 	xNoti = 46;
-	yNoti = 10;
+	yNoti = 19;
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 	//Menu
@@ -125,6 +123,7 @@ int main() {
 		temp = toupper(_getch());
 		if (temp == '1' || temp == '\r') {
 			system("cls");
+			reSizeConsole(1150, 500);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 			cg.initGame();
 			cg.startGame();
@@ -143,8 +142,9 @@ int main() {
 	t.detach();
 	PlaySound(NULL, NULL, SND_ASYNC);
 
-	xNoti = 75;
-	yNoti = 14;
+	xCur = 24;
+	xNoti = 116;
+	yNoti = 13;
 
 	//Game
 	
@@ -159,35 +159,29 @@ int main() {
 				return 0;
 			}
 			else if (temp == 'P' || temp == 'L' || temp == 'T') {
-				cg.pauseGame();
 				MOVING = temp;
-				t1.join();
-				cg.notiGame();
+				cg.pauseGame(t1);
 				if (temp != 'T') {
 					while (1) {
 						int ex_temp = toupper(_getch());
 						if (ex_temp == 'Y') {
-							IS_RUNNING = true;
-							//cg.exitGame(t1);
+							cg.resumeGame();
 							t1 = thread{ SubThread };
 							break;
 						}
 						else if (ex_temp == 'N') {
 							IS_RUNNING = false;
-							//cg.exitGame(t1);
 							return 0;
 						}
 					}
 				}
 				else {
 					IS_RUNNING = true;
-					//cg.exitGame(t1);
 					t1 = thread{ SubThread };
 				}
 			}
 			else{
 				if (!IS_RUNNING) {
-					//cg.removeNoti();
 					IS_RUNNING = true;
 					cg.exitGame(t1);
 					t1 = thread{ SubThread };
@@ -196,16 +190,14 @@ int main() {
 			}
 		}
 		else {
-			//cg.exitGame(t1);
 			if (temp == 'Y') {
-				t1.join();
+				cg.exitGame(t1);
 				cg.initGame();
 				cg.startGame();
-				IS_RUNNING = true;
 				t1 = thread{ SubThread };
 			}
 			else if(temp=='N'){
-				t1.join();
+				cg.exitGame(t1);
 				return 0;
 			}
 		}

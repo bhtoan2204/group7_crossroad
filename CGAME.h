@@ -12,34 +12,35 @@
 #include <string>
 #include <fstream>
 
-#define MAX_X 19
-#define MAX_Y 71
+#define MAX_X 25
+#define MAX_Y 81
 
 #include "CPEOPLE.h"
 #include "CTRUCK.h"
 #include "CCAR.h"
 #include "CDINOSAUR.h"
 #include "CBIRD.h"
-#include "Console.h"
+#include "CConsole.h"
 
 using namespace std;
 
+extern int xCur;
 extern int xNoti;
 extern int yNoti;
 extern int level;
 extern int time_truck;
 extern int time_car;
-extern char Title[5][77];
+extern char Title[16][83];
 extern char Menu[3][24];
 extern char prevBattleField[MAX_X][MAX_Y], BattleField[MAX_X][MAX_Y];
-extern char InfoTable[10][19];
+extern char InfoTable[13][58];
 extern char NotiTable[3][24];
 extern char Truck[MAX_T_X][MAX_T_Y];
 extern char Car[MAX_C_X][MAX_C_Y];
 extern char Dino[MAX_D_X][MAX_D_Y];
 extern char Bird[MAX_B_X][MAX_B_Y];
 extern char People[MAX_P_X][MAX_P_Y];
-extern char Explosion[3][3];
+extern char Explosion[3][5];
 extern vector<CANIMAL*> cAni;
 extern vector<CVEHICLE*> cVehi;
 extern string filename;
@@ -70,10 +71,10 @@ class CGAME
 		void initGame();
 		void startGame();
 		void exitGame(thread& t);
-		void pauseGame();
-		void resumeGame(thread& t);
+		void pauseGame(thread& t);
+		void resumeGame();
 		void saveGame(string fName);
-		void loadGame(string fName);
+		bool loadGame(string fName);
 		void notiGame();
 		void notiSpecificGame(int x);
 		void removeNoti();
